@@ -38,24 +38,59 @@
 
 
 ####################################### PseudoCode:
-#[] open file:
+#[X] open file:
 # First we'll need to open the file -> variable = File.read(file_path), JSON.parse (variable, symbolize_names: true)
 
-#[] find over 55B companies:
+#[X] find over 55B companies:
 # .find_all or .select
 # iterate into array & find market cap, split on space, (.shift to select first element), remove first element ($), .to_i (.to_f)
 # if that number is >= 55 return the object (the entire hash object)
 
-#[] find Avg:
+#[X] find Avg:
 # We can grab the Top Insurance Companies key and iterate through it's array-value to put all market caps into another array
 # with that new array we could sum and divide by .size/.length (NOT use .count since that's another iteration and would slow the processing speed down)
 
-#[] build hash:
+#[X] build hash:
 # build a hash of our JSON: Avg Market Cap, Time: Time.now (?), Insurance Companies over 55B
 
-#[] return JSON:
+#[X] return JSON:
 # OpenStruct.new(hash) OR JSON.generate(hash??) OR .pretty_generate OR .to_json ... we'll do more research then
 
 #[] refactor
 
 ####################################### First Draft:
+require 'json'
+
+def find_ins_co_over_55b
+  all_ins_comp_data = File.read('json_test.json')
+  parsed_data = JSON.parse(all_ins_comp_data)
+  top_ins_comp = parsed_data["InsuranceCompanies"]["Top Insurance Companies"]
+
+  # ins comp vver 55B:
+  ins_comp_over_55b = top_ins_comp.find_all do |ins_co|
+    ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f >= 55
+  end
+
+  # average market cap:
+  market_cap_sum = top_ins_comp.sum do |ins_co|
+    ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f
+  end
+  market_cap_avg = (market_cap_sum/top_ins_comp.size).to_s #do we want this to be String or float
+
+  #build hash:
+  hash = {
+    "InsuranceCompanies": {
+      "Time": Time.now,
+      "Average Market Cap": market_cap_avg,
+      "Insurance Companies over 55B": ins_comp_over_55b
+      }
+  }
+
+  # hash.to_json
+  puts JSON.generate(hash)
+end
+
+# data = find_ins_co_over_55b
+# pp data
+
+find_ins_co_over_55b
