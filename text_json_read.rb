@@ -7,3 +7,55 @@
 ### if time allows:
 # Add this insurance company: Marketz & Moneyz (MnM) with 55.1 billion
 # return new average along with ins. companies as JSON
+
+
+####################################### Clarification Q:
+# Do we want to set up lib/spec files and write a test for this first? Or just p/puts to the terminal?
+  #=> puts to the terminal please
+# When we say "average" do we mean the median (the middle company's Market Cap) or the sum of all numbers divided by the total count? 
+  #=> we'd like the average (sum/count)
+# What key name do we want the average to be saved as? "Avg Market Cap" ok?  
+  #=> yes
+# How about the name of the ins. companies that are returned, "Insurance Companies Over 55B"?
+  #=> yes
+# For Time, do you want exact time or month & year?
+  #=> either one is ok.
+# Also, do we want this average to be run before or after we add the newest insurance company? 
+  #=> let's do this after we add the company
+  
+# Does the No. of the company being added matter? (A specific location or just add to the end of the list?)
+  #=> just add to the end
+
+
+####################################### Match:
+#I've done something exactly like this before, but the different parts I'd touched
+# ex: opening JSON, parsing through JSON, averaging floats, adding an element into a collection, and returning JSON
+
+# Sad path testing/edge case testing ideas: 
+# what if theres an extra space? 
+# what if one of the cap is million or thousand or trillion?
+# what if the dollar sign is missing?? <- big uh-oh
+
+
+####################################### PseudoCode:
+#[] open file:
+# First we'll need to open the file -> variable = File.read(file_path), JSON.parse (variable, symbolize_names: true)
+
+#[] find over 55B companies:
+# .find_all or .select
+# iterate into array & find market cap, split on space, (.shift to select first element), remove first element ($), .to_i (.to_f)
+# if that number is >= 55 return the object (the entire hash object)
+
+#[] find Avg:
+# We can grab the Top Insurance Companies key and iterate through it's array-value to put all market caps into another array
+# with that new array we could sum and divide by .size/.length (NOT use .count since that's another iteration and would slow the processing speed down)
+
+#[] build hash:
+# build a hash of our JSON: Avg Market Cap, Time: Time.now (?), Insurance Companies over 55B
+
+#[] return JSON:
+# OpenStruct.new(hash) OR JSON.generate(hash??) OR .pretty_generate OR .to_json ... we'll do more research then
+
+#[] refactor
+
+####################################### First Draft:
