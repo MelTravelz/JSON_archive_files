@@ -96,44 +96,87 @@
 # find_ins_co_over_55b
 
 ####################################### Refactor (Phase1 - create helper methods):
+# require 'json'
+
+# def find_ins_co_over_55b
+#   top_ins_comp = read_parse_select_data
+#   # all_ins_comp_data = File.read('json_test.json')
+#   # parsed_data = JSON.parse(all_ins_comp_data)
+#   # top_ins_comp = parsed_data["InsuranceCompanies"]["Top Insurance Companies"]
+
+#   # ins comp vver 55B:
+#   ins_comp_over_55b = fetch_comp_over_55B(top_ins_comp)
+#   # ins_comp_over_55b = top_ins_comp.find_all do |ins_co|
+#   #   ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f >= 55
+#   # end
+
+#   # average market cap:
+#   market_cap_avg =  fetch_avg_market_cap(top_ins_comp)
+#   # market_cap_sum = top_ins_comp.sum do |ins_co|
+#   #   ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f
+#   # end
+#   # market_cap_avg = (market_cap_sum/top_ins_comp.size).to_s #do we want this to be String or float
+
+#   #build hash:
+#   hash_ready_for_json = build_hash(market_cap_avg, ins_comp_over_55b)
+#   # hash = {
+#   #   "InsuranceCompanies": {
+#   #     "Time": Time.now,
+#   #     "Average Market Cap": market_cap_avg,
+#   #     "Insurance Companies over 55B": ins_comp_over_55b
+#   #     }
+#   # }
+
+#   # pp hash_ready_for_json
+
+#   # hash.to_json
+#   puts JSON.generate(hash_ready_for_json)
+# end
+
+# def read_parse_select_data
+#   all_ins_comp_data = File.read('json_test.json')
+#   parsed_data = JSON.parse(all_ins_comp_data)
+#   parsed_data["InsuranceCompanies"]["Top Insurance Companies"]
+# end
+
+# def fetch_comp_over_55B(top_ins_comp)
+#   top_ins_comp.find_all do |ins_co|
+#     ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f >= 55
+#   end
+# end
+
+# def fetch_avg_market_cap(top_ins_comp)
+#   market_cap_sum = top_ins_comp.sum do |ins_co|
+#     ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f
+#   end
+#   (market_cap_sum/top_ins_comp.size).to_s #Question: Do we want this to be String or Float?
+# end
+
+# def build_hash(market_cap_avg, ins_comp_over_55b)
+#   {
+#     "InsuranceCompanies" => {
+#       "Time" => Time.now,
+#       "Average Market Cap" => market_cap_avg,
+#       "Insurance Companies over 55B" => ins_comp_over_55b
+#       }
+#   }
+# end
+
+# find_ins_co_over_55b
+
+####################################### Refactor (Phase2 - Clean-up):
 require 'json'
 
 def find_ins_co_over_55b
   top_ins_comp = read_parse_select_data
-  # all_ins_comp_data = File.read('json_test.json')
-  # parsed_data = JSON.parse(all_ins_comp_data)
-  # top_ins_comp = parsed_data["InsuranceCompanies"]["Top Insurance Companies"]
-
-  # ins comp vver 55B:
-  ins_comp_over_55b = fetch_comp_over_55B(top_ins_comp)
-  # ins_comp_over_55b = top_ins_comp.find_all do |ins_co|
-  #   ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f >= 55
-  # end
-
-  # average market cap:
+  ins_comp_over_55b = fetch_comp_over_55B(top_ins_comp) 
   market_cap_avg =  fetch_avg_market_cap(top_ins_comp)
-  # market_cap_sum = top_ins_comp.sum do |ins_co|
-  #   ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f
-  # end
-  # market_cap_avg = (market_cap_sum/top_ins_comp.size).to_s #do we want this to be String or float
-
-  #build hash:
   hash_ready_for_json = build_hash(market_cap_avg, ins_comp_over_55b)
-  # hash = {
-  #   "InsuranceCompanies": {
-  #     "Time": Time.now,
-  #     "Average Market Cap": market_cap_avg,
-  #     "Insurance Companies over 55B": ins_comp_over_55b
-  #     }
-  # }
 
-  # pp hash_ready_for_json
-
-  # hash.to_json
   puts JSON.generate(hash_ready_for_json)
 end
 
-def read_parse_select_data
+def read_parse_select_data 
   all_ins_comp_data = File.read('json_test.json')
   parsed_data = JSON.parse(all_ins_comp_data)
   parsed_data["InsuranceCompanies"]["Top Insurance Companies"]
@@ -149,7 +192,7 @@ def fetch_avg_market_cap(top_ins_comp)
   market_cap_sum = top_ins_comp.sum do |ins_co|
     ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f
   end
-  (market_cap_sum/top_ins_comp.size).to_s #Question: Do we want this to be String or Float?
+  (market_cap_sum/top_ins_comp.size).to_s
 end
 
 def build_hash(market_cap_avg, ins_comp_over_55b)
