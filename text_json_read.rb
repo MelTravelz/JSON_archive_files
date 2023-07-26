@@ -168,14 +168,15 @@
 require 'json'
 
 def find_ins_co_over_55b
-  top_ins_comp = read_parse_select_data
-  ins_comp_over_55b = fetch_comp_over_55B(top_ins_comp) 
+  top_ins_comp = read_parse_select_data # Would memoization here speed up processing times since it's being passed to other methods multiple times?
+  ins_comp_over_55b = fetch_comp_over_55B(top_ins_comp)  
   market_cap_avg =  fetch_avg_market_cap(top_ins_comp)
   hash_ready_for_json = build_hash(market_cap_avg, ins_comp_over_55b)
 
   puts JSON.generate(hash_ready_for_json)
 end
 
+# private # Does putting these helper methods under private here make sense? 
 def read_parse_select_data 
   all_ins_comp_data = File.read('json_test.json')
   parsed_data = JSON.parse(all_ins_comp_data)
@@ -206,3 +207,14 @@ def build_hash(market_cap_avg, ins_comp_over_55b)
 end
 
 find_ins_co_over_55b
+
+
+#### Final Notes & Questions: 
+# The `read_parse_select_data` method breaks Single Responsibility Principle, for our purposes is this ok, or would you have wanted to see this broke up even more? 
+# If I was to refactor again: I would see if there was a way to iterate just once and pull out the objects as well as the market caps numbers.
+# I'd also see if any arguments could be keyword arguments (or if this is just for `initialize` methods)?
+# Could memoization be used on the `all_ins_comp_data` variable to speed up processing times? 
+
+# Is there anything you see that I might have missed? 
+# How would you have refactored differently? 
+# Are there any quick changes you see that would improve the code?
