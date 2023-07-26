@@ -176,6 +176,7 @@ def find_ins_co_over_55b
   puts JSON.generate(hash_ready_for_json)
 end
 
+# Helper Methods:
 # private # Does putting these helper methods under private here make sense? 
 def read_parse_select_data 
   all_ins_comp_data = File.read('json_test.json')
@@ -185,13 +186,13 @@ end
 
 def fetch_comp_over_55B(top_ins_comp)
   top_ins_comp.find_all do |ins_co|
-    ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f >= 55
+    grab_market_cap(ins_co) >= 55
   end
 end
 
 def fetch_avg_market_cap(top_ins_comp)
   market_cap_sum = top_ins_comp.sum do |ins_co|
-    ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f
+    grab_market_cap(ins_co)
   end
   (market_cap_sum/top_ins_comp.size).to_s
 end
@@ -206,12 +207,17 @@ def build_hash(market_cap_avg, ins_comp_over_55b)
   }
 end
 
+# Helper method's Helper method!:
+def grab_market_cap(ins_co)
+  ins_co["Market Capitalization"].split(" ").shift.delete("$").to_f
+end
+
 find_ins_co_over_55b
 
 
 #### Final Notes & Questions: 
 # The `read_parse_select_data` method breaks Single Responsibility Principle, for our purposes is this ok, or would you have wanted to see this broke up even more? 
-# If I was to refactor again: I would see if there was a way to iterate just once and pull out the objects as well as the market caps numbers.
+#[X] If I was to refactor again: I would see if there was a way to iterate just once and pull out the objects as well as the market caps numbers.
 # I'd also see if any arguments could be keyword arguments (or if this is just for `initialize` methods)?
 # Could memoization be used on the `all_ins_comp_data` variable to speed up processing times? 
 
